@@ -1,35 +1,82 @@
-const posts= [
+//INITIAL ARRAY
+const posts = [
+  {
+    post: "Tempelhof Sunset",
+    likes: 50,
+    ID: 1,
+  },
+  {
+    post: "My new baby kitten",
+    likes: 300,
+    ID: 2,
+  },
+];
 
-]
+//VIEW
+class ViewPosts {
+  constructor(initPosts) {
+    this.posts = initPosts;
+  }
 
-// read
+  renderPosts() {
+    return this.posts.reduce((acc, curr) => {
+      acc += `Post: ${curr.post} \nLikes: ${curr.likes} \nID:${curr.ID} \n\n`;
+      return acc;
+    }, "");
+  }
+}
 
+//CONTROLS
+class PostsControl extends ViewPosts {
+  constructor(posts) {
+    super(posts);
+  }
 
-//create
-//1- post
-//2- comment
+  createPost({ post, likes }) {
+    const newPost = {
+      post,
+      likes,
+      ID: this.posts.length + 1,
+    };
+    const newPostClone = [...this.posts, newPost];
+    this.posts = newPostClone;
+  }
 
-//Edit
-//1- post
-//2- comment
+  editPost({ post, likes, ID }) {
+    return this.posts.map((el) => {
+      if (el.ID === ID) {
+        if (post) {
+          el.post = post;
+        }
+        if (likes) {
+          el.likes = likes;
+        }
+      }
+    });
+  }
 
-//remove
-//1- post
-//2- comment
+  removePost({ post, likes, ID }) {
+    let IDindex = ID - 1;
+    let postIndex = this.posts[IDindex];
 
+    console.log(postIndex);
 
+    if (post && likes) {
+      this.posts.splice(IDindex, 1);
+    }
+    if (post) {
+      postIndex.splice(0, 1);
+    }
+    if (likes) {
+      //ostIndex.splice(1, 1);
+    }
+  }
+}
 
-/**
-Alex 19/11/2020
- I think this is the best I’ve seen till now.
-
- likes 4
- comments:
-    Tommy:
-        WOW.....
-    Jon:
-       It looks classy
----------------------------------
-
-
- */
+//CALL STACK
+const productData = new PostsControl(posts);
+productData.createPost({ post: "Drunk Video", likes: 10 });
+productData.editPost({ post: "Underwhelming Selfie", ID: 3 });
+productData.removePost({ post: "delete", ID: 3 });
+console.log(productData.renderPosts());
+//
